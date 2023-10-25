@@ -40,6 +40,13 @@ export default defineConfig(({ mode }) => {
           rewrite: (path) => path.replace(/^\/jr-api/, ''),
           headers: { 'X-JR-API-Location': 'http://localhost:8080/jr-api' },
         },
+
+        '/pisa-api': {
+          target: 'https://web104.crm.pisasales.de/hackathon',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/pisa-api/, ''),
+          // headers: { 'X-JR-API-Location': 'http://localhost:8080/jr-api' },
+        },
       },
     },
   }
