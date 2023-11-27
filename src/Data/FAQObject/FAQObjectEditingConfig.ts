@@ -16,6 +16,10 @@ provideEditingConfig(FAQObject, {
       title: "Creation date", 
       description: "Creation date"
     },
+    creation_date_fmt: {
+      title: "Creation date (formatted)", 
+      description: "Creation date (formatted)"
+    },
     faq_title: {
       title: "FAQ title", 
       description: "FAQ title"

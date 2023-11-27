@@ -8,6 +8,18 @@ export const FAQObject =  provideDataClass("FAQObject", {
 
     index: async (params) => {
       const faqList: any = await unstable_JrRestApi.post(`../pisa-api/search-faqs`, { 
+        data: {
+          "query": {
+            "NAM": "!''",
+            "PSC_UPD": ">= '20231127000000'",
+          },
+          "sort": [
+            {
+              "PSC_CRE": true
+            }
+          ],
+          "maximum": 10
+        }
 
       });
 

@@ -20,6 +20,10 @@ provideEditingConfig(ServiceObject, {
       title: "Model Number", 
       description: "Model number"
     },
+    carrier: {
+      title: "Carrier", 
+      description: "Carrier / driver"
+    },
     created_by: {
       title: "created_by", 
       description: "Created by"
@@ -31,6 +35,10 @@ provideEditingConfig(ServiceObject, {
     build_date: {
       title: "Build date", 
       description: "Build date"
+    },
+    km: {
+      title: "Mileage in km", 
+      description: "Mileage in km"
     },
     first_name: {
       title: "First name",

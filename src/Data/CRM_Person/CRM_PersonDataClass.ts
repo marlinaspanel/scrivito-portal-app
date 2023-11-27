@@ -15,7 +15,7 @@ export const CRM_Person =  provideDataClass("CRM_Person", {
       const personList: any = await unstable_JrRestApi.post(`../pisa-api/search-persons`, { 
         data: {
           "query": {
-            "NAM": "!''",
+            "EMA": "%'justrelate.com'",
           },
           "sort": [
             {

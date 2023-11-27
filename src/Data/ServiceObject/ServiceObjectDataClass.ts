@@ -26,7 +26,7 @@ export const ServiceObject =  provideDataClass("ServiceObject", {
               "PSC_CRE": false
             }
           ],
-          "maximum": 3
+          "maximum": 5
         }
       });
 
