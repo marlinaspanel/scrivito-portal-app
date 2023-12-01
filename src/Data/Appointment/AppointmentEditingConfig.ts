@@ -1,8 +1,8 @@
 import { provideEditingConfig } from 'scrivito'
-import { AppObject} from './AppointmentsObjectDataClass'
+import { Appointment } from './AppointmentObjectDataClass'
 
-provideEditingConfig(AppObject, {
-  title: 'App Object',
+provideEditingConfig(Appointment, {
+  title: 'Appointment',
   attributes: {
     created_by: {
       title: "Created by", 
@@ -27,6 +27,10 @@ provideEditingConfig(AppObject, {
     note: {
       title: "Note", 
       description: "Note"
+    },
+    location: {
+      title: "Location", 
+      description: "Appointment location"
     },
    start: {
         title: "Start Date", 

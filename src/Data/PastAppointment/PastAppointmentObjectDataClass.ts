@@ -1,6 +1,6 @@
 import { userInfo } from "os";
 import { provideDataClass, unstable_JrRestApi, currentUser, load } from "scrivito";
-export const AppObject =  provideDataClass("AppObject", {
+export const PastAppointment =  provideDataClass("PastAppointment", {
     connection: {
         get: async (id) => {
             
@@ -13,11 +13,11 @@ export const AppObject =  provideDataClass("AppObject", {
             data: {
               "query": {
                 "NAM": "!''",
-                "PSC_UPD": ">= '20231127000000'",
+                "END_DAT": "<'20231204000000'",
               },
               "sort": [
                 {
-                  "PSC_CRE": true
+                  "BEG_DAT": true
                 }
               ],
               "maximum": 10
