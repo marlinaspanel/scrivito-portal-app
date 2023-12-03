@@ -13,7 +13,10 @@ export const PastAppointment =  provideDataClass("PastAppointment", {
             data: {
               "query": {
                 "NAM": "!''",
-                "END_DAT": "<'20231204000000'",
+                "BEG_DAT": "< $TODAY",
+                "END_DAT": "> $TODAY-2M",
+                "STY_IDN": "DATE",
+                "CON_GID": "B714FFAEA1A449B0A67CCFCAE1479221",
               },
               "sort": [
                 {

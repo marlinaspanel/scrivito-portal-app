@@ -44,7 +44,11 @@ export const ServiceObject =  provideDataClass("ServiceObject", {
     },
 
     update: async (id, data) => {
-      return {};
+      const serviceObject: any = await unstable_JrRestApi.post(`../pisa-api/service-objects`, { data });
+
+      return {
+        _id: serviceObject.id,
+      };
     },
 
     delete: async (id) => { 

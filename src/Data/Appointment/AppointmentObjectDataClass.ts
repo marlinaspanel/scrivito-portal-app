@@ -13,7 +13,9 @@ export const Appointment =  provideDataClass("Appointment", {
             data: {
               "query": {
                 "NAM": "!''",
-                "BEG_DAT": ">= '$TODAY'",
+                "BEG_DAT": ">= $TODAY",
+                "STY_IDN": "DATE",
+                "CON_GID": "B714FFAEA1A449B0A67CCFCAE1479221",
               },
               "sort": [
                 {

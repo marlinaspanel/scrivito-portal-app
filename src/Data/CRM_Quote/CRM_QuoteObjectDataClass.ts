@@ -1,17 +1,17 @@
 import { provideDataClass, unstable_JrRestApi } from "scrivito";
 
-export const FAQObject =  provideDataClass("FAQObject", {
+export const CRM_QuoteObject =  provideDataClass("CRM_QuoteObject", {
   connection: {
     get: async (id) => {
-      return unstable_JrRestApi.get(`../pisa-api/faq/${id}`)
+      return unstable_JrRestApi.get(`../pisa-api/quotes/${id}`)
     },
 
     index: async (params) => {
-      const faqList: any = await unstable_JrRestApi.post(`../pisa-api/search-faqs`, { 
+      const quoteList: any = await unstable_JrRestApi.post(`../pisa-api/search-quotes`, { 
         data: {
           "query": {
             "NAM": "!''",
-            "PSC_UPD": ">= '20231127000000'",
+            "CON_GID": "B714FFAEA1A449B0A67CCFCAE1479221",
           },
           "sort": [
             {
@@ -22,11 +22,9 @@ export const FAQObject =  provideDataClass("FAQObject", {
         }
 
       });
-
-      console.log(faqList, "asdfsadffaqList");
       
 
-      return {results : faqList?.results}
+      return {results : quoteList?.results}
     },
 
     create: async (data) => {
@@ -36,7 +34,6 @@ export const FAQObject =  provideDataClass("FAQObject", {
     },
 
     update: async (id, data) => {
-      const faq: any = await unstable_JrRestApi.put(`../pisa-api/faqs/${id}`, {data});
       return {};
     },
 

@@ -48,5 +48,9 @@ provideEditingConfig(Appointment, {
         title: "End date (formatted)", 
         description: "End date (formatted)"
       },
+      contact_email: {
+        title: "Contact email", 
+        description: "Contact email"
+      },
   },
 })
