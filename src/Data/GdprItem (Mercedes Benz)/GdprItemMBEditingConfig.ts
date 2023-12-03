@@ -1,7 +1,7 @@
 import { provideEditingConfig } from 'scrivito'
 import { GdprItemMB } from './GdprItemMBDataClass'
 
-provideEditingConfig(GdprItem, {
+provideEditingConfig(GdprItemMB, {
   title: 'GDPR Item (MB)',
   attributes: {
     name: {

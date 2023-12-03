@@ -5,7 +5,7 @@ type PersonArray = {
   results?: []
 }
 
-export const GdprItem =  provideDataClass("GdprItemMB", {
+export const GdprItemMB =  provideDataClass("GdprItemMB", {
   connection: {
     get: async (id) => {
       return unstable_JrRestApi.get(`../pisa-api/gdpr/${id}`)
