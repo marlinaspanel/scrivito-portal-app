@@ -61,6 +61,7 @@ provideComponent(DataFormContainerWidget, ({ widget }) => {
       } else {
         const createdItem = await dataScope.create(attributes)
         toastAndRedirect(createdItem)
+        formRef.current.reset()
       }
     } catch (error) {
       if (!(error instanceof Error)) return
@@ -86,7 +87,7 @@ provideComponent(DataFormContainerWidget, ({ widget }) => {
   function toastAndRedirect(targetDataItem: DataItem) {
     if (submittedMessage) toast.success(submittedMessage)
 
-    if (redirectAfterSubmit)
+    if (redirectAfterSubmit) {
       // TODO: Remove this work around once #10212 is resolved
       navigateTo(redirectAfterSubmit, {
         params: {
@@ -94,6 +95,7 @@ provideComponent(DataFormContainerWidget, ({ widget }) => {
             targetDataItem.id(),
         },
       })
+    }
   }
 })
 

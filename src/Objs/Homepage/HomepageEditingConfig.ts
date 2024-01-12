@@ -1,10 +1,8 @@
 import { provideEditingConfig } from 'scrivito'
 import { Homepage } from './HomepageObjClass'
-import { classNameToThumbnail } from '../../utils/classNameToThumbnail'
 
 provideEditingConfig(Homepage, {
   title: 'Homepage',
-  thumbnail: classNameToThumbnail('Homepage'),
   attributes: {
     contentTitle: {
       title: 'Site name',
@@ -25,6 +23,12 @@ provideEditingConfig(Homepage, {
       title: 'Favicon',
     },
     title: { title: 'Title' },
+    siteCartPage: { title: 'Location of cart page' },
+    sitePortalOverviewPage: { title: 'Location of portal overview page' },
+    siteSearchResultsPage: {
+      title: 'Location of search results page',
+    },
+    siteUserProfilePage: { title: 'Location of user profile page' },
   },
   propertiesGroups: [
     {
@@ -34,6 +38,10 @@ provideEditingConfig(Homepage, {
         'siteLogoDark',
         'siteLogoLight',
         'siteFavicon',
+        'siteCartPage',
+        'sitePortalOverviewPage',
+        'siteSearchResultsPage',
+        'siteUserProfilePage',
       ],
       key: 'site-settings-group',
     },

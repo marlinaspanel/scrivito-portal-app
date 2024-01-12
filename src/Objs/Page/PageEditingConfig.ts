@@ -1,11 +1,16 @@
 import { provideEditingConfig } from 'scrivito'
 import { Page } from './PageObjClass'
-import { classNameToThumbnail } from '../../utils/classNameToThumbnail'
+import Thumbnail from './thumbnail.svg'
 
 provideEditingConfig(Page, {
   title: 'Page',
-  thumbnail: classNameToThumbnail('Page'),
+  thumbnail: Thumbnail,
   attributes: {
+    excludeFromSearch: {
+      title: 'Exclude from search results?',
+      description:
+        'If checked, this download will not be included in search results.',
+    },
     hideInNavigation: {
       title: 'Hide in navigation?',
       description: 'Default: No',
@@ -31,6 +36,7 @@ provideEditingConfig(Page, {
     'metaDataDescription',
     'hideInNavigation',
     'linkIcon',
+    'excludeFromSearch',
     'requireUserLogin',
   ],
 })
