@@ -69,6 +69,7 @@ provideComponent(DataFormNumberWidget, ({ widget }) => {
         placeholder={widget.get('placeholder')}
         required={widget.get('required')}
         type="number"
+        className="form-number"
         min={widget.get('minValue') ?? undefined}
         max={widget.get('maxValue') ?? undefined}
         step={widget.get('stepValue') ?? undefined}

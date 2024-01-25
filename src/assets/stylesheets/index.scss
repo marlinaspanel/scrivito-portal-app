@@ -967,11 +967,23 @@ section:focus >,
 // -- general form-control -- //
 
 .form-control {
-  border: none;
-  border-radius: unset;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
   background: #fff !important;
 }
 .form-control:disabled {
+  background: rgba(255, 255, 255, 0.65);
+  cursor: not-allowed;
+}
+
+.form-number {
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  background: #fff !important;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+}
+.form-number:disabled {
   background: rgba(255, 255, 255, 0.65);
   cursor: not-allowed;
 }
