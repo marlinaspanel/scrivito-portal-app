@@ -26,6 +26,7 @@ export default defineConfig(({ mode }) => {
     },
     define: {
       'import.meta.env.SCRIVITO_TENANT': JSON.stringify(env.SCRIVITO_TENANT),
+      'import.meta.env.PISA_URL': JSON.stringify(env.PISA_URL),
       'import.meta.env.ENABLE_NEOLETTER_FORM_BUILDER_SUBSCRIPTION_FEATURE':
         JSON.stringify(env.ENABLE_NEOLETTER_FORM_BUILDER_SUBSCRIPTION_FEATURE),
     },
@@ -47,6 +48,12 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/auth/, ''),
           headers: { 'X-JR-Auth-Location': 'http://localhost:8080/auth' },
+        },
+        '/pisa-api': {
+          target: 'https://web125.crm.pisasales.de/portal',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/pisa-api/, ''),
+          headers: { 'X-JR-API-Location': 'http://localhost:8080/pisa-api' },
         },
       },
     },
