@@ -13,7 +13,6 @@ dns.setDefaultResultOrder('verbatim')
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const outDir = 'dist'
-
   const PISA_URL = env.PISA_URL
   const enablePisa = !!PISA_URL
 
