@@ -24,12 +24,12 @@ provideEditingConfig(Page, {
       title: 'Page description',
       description: 'Limit to 175, ideally 150 characters.',
     },
-    title: { title: 'Title' },
-    requireUserLogin: {
-      title: 'Require user login?',
+    showAsLandingPage: {
+      title: 'Display this page as a landing page?',
       description:
-        'Requires a user to be logged in for this page and all sub-pages',
+        'Removes the header navigation and only centers the logo instead. Default: No',
     },
+    title: { title: 'Title' },
   },
   properties: [
     'title',
@@ -37,6 +37,6 @@ provideEditingConfig(Page, {
     'hideInNavigation',
     'linkIcon',
     'excludeFromSearch',
-    'requireUserLogin',
+    'showAsLandingPage',
   ],
 })

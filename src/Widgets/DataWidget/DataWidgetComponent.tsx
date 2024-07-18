@@ -1,35 +1,36 @@
-import {
-  ContentTag,
-  DataScope,
-  provideComponent,
-  // @ts-expect-error TODO: remove once officially released
-  useDataScope,
-} from 'scrivito'
+import { ContentTag, provideComponent, useData } from 'scrivito'
 import { DataWidget } from './DataWidgetClass'
 import { EditorNote } from '../../Components/EditorNote'
+import { useContext } from 'react'
+import { DataBatchContext } from '../../Components/DataBatchContext'
+import { Loading } from '../../Components/Loading'
 
-provideComponent(DataWidget, ({ widget }) => {
-  const dataScope: DataScope | undefined = useDataScope()
+provideComponent(
+  DataWidget,
+  ({ widget }) => {
+    const dataScope = useData()
+    const { limit } = useContext(DataBatchContext)
 
-  if (!dataScope) {
-    return <EditorNote>No data found. Please select a data source.</EditorNote>
-  }
+    if (dataScope.isEmpty()) {
+      return <EditorNote>Data is empty.</EditorNote>
+    }
 
-  if (dataScope.isEmpty()) {
-    return <EditorNote>Data is empty.</EditorNote>
-  }
-
-  return (
-    <>
-      {dataScope.take().map((dataItem) => (
-        <ContentTag
-          content={widget}
-          attribute="content"
-          className="col"
-          dataContext={dataItem}
-          key={dataItem.id()}
-        />
-      ))}
-    </>
-  )
-})
+    return (
+      <>
+        {dataScope
+          .transform({ limit })
+          .take()
+          .map((dataItem) => (
+            <ContentTag
+              content={widget}
+              attribute="content"
+              className="col"
+              dataContext={dataItem}
+              key={dataItem.id()}
+            />
+          ))}
+      </>
+    )
+  },
+  { loading: Loading },
+)

@@ -1,9 +1,6 @@
-import { provideDataClass } from 'scrivito'
-import { pisaClient } from '../pisaClient'
+import { localStorageOrderDocumentDataClass } from './LocalStorage/localStorageOrderDocumentDataClass'
+import { pisaOrderDocumentDataClass } from './Pisa/pisaOrderDocumentDataClass'
 
-const orderDocumentClient = pisaClient('order-document')
-
-export const OrderDocument = provideDataClass('OrderDocument', {
-  // @ts-expect-error until out of private beta
-  restApi: orderDocumentClient,
-})
+export const OrderDocument = import.meta.env.ENABLE_PISA
+  ? pisaOrderDocumentDataClass()
+  : localStorageOrderDocumentDataClass()

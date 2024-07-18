@@ -1,3 +1,5 @@
+import { pseudoRandom32CharHex } from './pseudoRandom32CharHex'
+
 export async function convertBlobAttributes(
   data: Record<string, unknown>,
 ): Promise<Record<string, unknown>> {
@@ -20,11 +22,25 @@ async function convertAttribute(value: unknown) {
 async function blobToBinary(blob: Blob | File): Promise<{
   dataBase64: string
   filename: string
+
+  // only needed for localStorage
+  contentLength?: number
+  contentType?: string
+  _id?: string
 }> {
-  return {
+  const binary = {
     dataBase64: await blobToBase64(blob),
     filename: blob instanceof File ? blob.name : 'unknown-name',
   }
+
+  return import.meta.env.ENABLE_PISA
+    ? binary
+    : {
+        ...binary,
+        contentLength: blob.size,
+        contentType: blob.type,
+        _id: pseudoRandom32CharHex(),
+      }
 }
 
 async function blobToBase64(blob: Blob): Promise<string> {

@@ -7,10 +7,16 @@ provideEditingConfig(Homepage, {
     contentTitle: {
       title: 'Site name',
     },
+    baseUrl: {
+      title: 'Base URL',
+      description:
+        'Under which URL is this site reachable? E.g. "https://www.tynacoon.com/en"',
+    },
     metaDataDescription: {
       title: 'Page description',
       description: 'Limit to 175, ideally 150 characters.',
     },
+    siteLanguageIcon: { title: 'Language icon' },
     siteLogoDark: {
       title: 'Dark logo',
       description: 'Used with light backgrounds',
@@ -36,9 +42,11 @@ provideEditingConfig(Homepage, {
       title: 'Site settings',
       properties: [
         'contentTitle',
+        'baseUrl',
         'siteLogoDark',
         'siteLogoLight',
         'siteFavicon',
+        'siteLanguageIcon',
         'sitePortalOnlyMode',
         'siteCartPage',
         'sitePortalOverviewPage',

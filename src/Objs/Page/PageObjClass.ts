@@ -9,7 +9,7 @@ export const Page = provideObjClass('Page', {
     hideInNavigation: 'boolean',
     linkIcon: 'string',
     metaDataDescription: 'string',
-    requireUserLogin: 'boolean',
+    showAsLandingPage: 'boolean',
     title: 'string',
   },
   extractTextAttributes: ['body'],

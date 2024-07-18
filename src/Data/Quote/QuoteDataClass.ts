@@ -1,7 +1,6 @@
-import { provideDataClass } from 'scrivito'
-import { pisaClient } from '../pisaClient'
+import { localQuoteDataClass } from './LocalStorage/localQuoteDataClass'
+import { pisaQuoteDataClass } from './Pisa/pisaQuoteDataClass'
 
-const quoteClient = pisaClient('quote')
-
-// @ts-expect-error until out of private beta
-export const Quote = provideDataClass('Quote', { restApi: quoteClient })
+export const Quote = import.meta.env.ENABLE_PISA
+  ? pisaQuoteDataClass()
+  : localQuoteDataClass()

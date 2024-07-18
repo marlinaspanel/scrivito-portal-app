@@ -1,9 +1,6 @@
-import { provideDataClass } from 'scrivito'
-import { pisaClient } from '../pisaClient'
+import { localStorageGdprDataClass } from './LocalStorage/localStorageGdprDataClass'
+import { pisaGdprDataClass } from './Pisa/pisaGdprDataClass'
 
-const gdprClient = pisaClient('gdpr')
-
-export const Gdpr = provideDataClass('Gdpr', {
-  // @ts-expect-error until out of private beta
-  restApi: gdprClient,
-})
+export const Gdpr = import.meta.env.ENABLE_PISA
+  ? pisaGdprDataClass()
+  : localStorageGdprDataClass()

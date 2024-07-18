@@ -1,76 +1,86 @@
-import { Obj, currentSiteId, load, navigateTo } from 'scrivito'
+import { Obj, currentSiteId, getInstanceId, load, navigateTo } from 'scrivito'
+import { isMultitenancyEnabled } from './scrivitoTenants'
 
 const location = typeof window !== 'undefined' ? window.location : undefined
 
+const NEOLETTER_MAILINGS_SITE_ID = 'mailing-app'
+
 export function baseUrlForSite(siteId: string): string | undefined {
-  const tenant = getTenantFromEnv()
-  if (!location || !tenant) return
+  if (siteId === NEOLETTER_MAILINGS_SITE_ID) {
+    return `https://mailing.neoletter.com/${getInstanceId()}`
+  }
 
-  const urlParts = [location.origin]
+  const siteRoot = Obj.onSite(siteId).root()
+  if (!siteRoot) return
 
-  // Multitenancy mode
-  if (!import.meta.env.SCRIVITO_TENANT) urlParts.push(tenant)
+  const baseAppUrl = getBaseAppUrl()
+  if (!baseAppUrl) return
 
-  const language = Obj.onSite(siteId).root()?.language()
-  if (language) urlParts.push(language)
+  const language = siteRoot.language()
+  if (!language) return
 
-  return urlParts.join('/')
+  return `${baseAppUrl}/${language}`
 }
 
 export function siteForUrl(
   url: string,
 ): { baseUrl: string; siteId: string } | undefined {
-  const language = /\b\/([0-9a-f]{32}\/)?(?<lang>[a-z]{2})([?/]|$)/.exec(url)
-    ?.groups?.lang
+  const neoletterBaseUrl = `https://mailing.neoletter.com/${getInstanceId()}`
+  if (url.startsWith(neoletterBaseUrl)) {
+    return { baseUrl: neoletterBaseUrl, siteId: NEOLETTER_MAILINGS_SITE_ID }
+  }
 
-  const siteId = Obj.onAllSites()
-    .where('_path', 'equals', '/')
-    .and('_language', 'equals', language || null)
+  const baseAppUrl = getBaseAppUrl()
+  if (!baseAppUrl) return
+
+  const regex = new RegExp(`^${baseAppUrl}\\/(?<lang>[a-z]{2})([?/]|$)`)
+  const language = regex.exec(url)?.groups?.lang
+  if (!language) return
+
+  const languageSite = allWebsites()
+    .and('_language', 'equals', language)
     .first()
-    ?.siteId()
+  if (!languageSite) return
 
-  if (!siteId) return
+  const languageSiteId = languageSite.siteId()
+  if (!languageSiteId) return
 
-  const baseUrl = baseUrlForSite(siteId)
-  if (baseUrl) return { baseUrl, siteId }
+  return { baseUrl: `${baseAppUrl}/${language}`, siteId: languageSiteId }
 }
 
 export async function ensureSiteIsPresent() {
   if ((await load(currentSiteId)) === null) {
-    navigateTo(() =>
-      Obj.onAllSites().where('_path', 'equals', '/').order('_language').first(),
-    )
+    navigateTo(() => {
+      const websites = allWebsites().toArray()
+      const preferredLanguageOrder = [...window.navigator.languages, 'en', null]
+
+      for (const language of preferredLanguageOrder) {
+        const site = websites.find((site) => siteHasLanguage(site, language))
+        if (site) return site
+      }
+
+      return websites[0] || null
+    })
   }
 }
 
-export function getTenantFromEnv(): string | undefined {
-  if (import.meta.env.SCRIVITO_TENANT) return import.meta.env.SCRIVITO_TENANT
+function getBaseAppUrl(): string | undefined {
+  if (!location) return
 
-  if (!location) throw new Error('Could not determine tenant!')
+  return isMultitenancyEnabled()
+    ? `${location.origin}/${getInstanceId()}`
+    : location.origin
+}
 
-  // Multitenancy mode
-  const tenantFromUrl = location.pathname.match(/^\/([0-9a-f]{32})\b/)?.[1]
-  const tenantFromQuery = new URLSearchParams(location.search).get('tenantId')
-  const tenant = tenantFromUrl || tenantFromQuery
+function allWebsites() {
+  return Obj.onAllSites()
+    .where('_path', 'equals', '/')
+    .andNot('_siteId', 'equals', NEOLETTER_MAILINGS_SITE_ID)
+}
 
-  if (!tenant) {
-    if (
-      import.meta.env.VITE_MULTITENANCY_FALLBACK_SCRIVITO_TENANT &&
-      !tenantFromQuery
-    ) {
-      const fallbackScrivitoTenant = import.meta.env
-        .VITE_MULTITENANCY_FALLBACK_SCRIVITO_TENANT
-      if (
-        typeof fallbackScrivitoTenant === 'string' &&
-        fallbackScrivitoTenant.match(/^[0-9a-f]{32}$/)
-      ) {
-        location.replace(`${location.origin}/${fallbackScrivitoTenant}`)
-        return
-      }
-    }
-
-    throw new Error('Could not determine tenant!')
-  }
-
-  return tenant
+function siteHasLanguage(site: Obj, language: string | null) {
+  const siteLanguage = site.language()
+  return language && siteLanguage
+    ? language.startsWith(siteLanguage)
+    : language === siteLanguage
 }

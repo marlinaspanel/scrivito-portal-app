@@ -5,9 +5,7 @@ import Thumbnail from './thumbnail.svg'
 provideEditingConfig(ProductCategory, {
   title: 'Product Category',
   thumbnail: Thumbnail,
-  attributes: {
-    title: { title: 'Title' },
-  },
+  attributes: { title: { title: 'Title' } },
   properties: ['title', 'description', 'image'],
   thumbnailForContent: (obj) => obj.get('image'),
 })

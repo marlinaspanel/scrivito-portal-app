@@ -2,6 +2,7 @@ import { provideObjClass } from 'scrivito'
 
 export const Homepage = provideObjClass('Homepage', {
   attributes: {
+    baseUrl: 'stringlist',
     body: 'widgetlist',
     childOrder: 'referencelist',
     contentTitle: 'string',
@@ -10,6 +11,7 @@ export const Homepage = provideObjClass('Homepage', {
     siteFavicon: ['reference', { only: 'Image' }],
     siteFooter: ['widgetlist', { only: 'SectionWidget' }],
     siteHeader: 'widgetlist',
+    siteLanguageIcon: ['reference', { only: 'Image' }],
     siteLogoDark: ['reference', { only: 'Image' }],
     siteLogoLight: ['reference', { only: 'Image' }],
     siteNotFound: ['widgetlist', { only: 'SectionWidget' }],

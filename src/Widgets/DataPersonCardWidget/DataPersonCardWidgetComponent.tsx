@@ -1,10 +1,9 @@
 import {
-  provideComponent,
-  // @ts-expect-error TODO: remove once officially released
-  useDataScope,
-  DataScope,
   connect,
+  ContentTag,
   DataItem,
+  provideComponent,
+  useData,
 } from 'scrivito'
 
 import { DataBinaryImage } from '../../Components/DataBinaryImage'
@@ -13,24 +12,30 @@ import { isDataBinary } from '../../utils/dataBinaryToUrl'
 import { DataPersonCardWidget } from './DataPersonCardWidgetClass'
 import { EditorNote } from '../../Components/EditorNote'
 import personCircle from '../../assets/images/person-circle.svg'
+import { Loading } from '../../Components/Loading'
 
-provideComponent(DataPersonCardWidget, () => {
-  const dataScope: DataScope | undefined = useDataScope()
+provideComponent(
+  DataPersonCardWidget,
+  ({ widget }) => {
+    const dataScope = useData()
 
-  if (!dataScope) {
-    return <EditorNote>No data found. Please select a data source.</EditorNote>
-  }
+    if (dataScope.isEmpty()) return <EditorNote>Data is empty.</EditorNote>
 
-  if (dataScope.isEmpty()) return <EditorNote>Data is empty.</EditorNote>
-
-  return (
-    <>
-      {dataScope.take().map((dataItem) => (
-        <PersonCard dataItem={dataItem} key={dataItem.id()} />
-      ))}
-    </>
-  )
-})
+    return (
+      <div>
+        <ContentTag
+          content={widget}
+          attribute="headline"
+          className="h6 text-uppercase"
+        />
+        {dataScope.take().map((dataItem) => (
+          <PersonCard dataItem={dataItem} key={dataItem.id()} />
+        ))}
+      </div>
+    )
+  },
+  { loading: Loading },
+)
 
 const PersonCard = connect(function PersonCard({
   dataItem,

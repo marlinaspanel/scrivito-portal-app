@@ -27,7 +27,11 @@ export function provideLocalStorageDataClass(
 
   return provideDataClass(className, {
     connection: {
-      async index(params): Promise<{ results: DataItem[]; count?: number }> {
+      async index(params): Promise<{
+        results: DataItem[]
+        count?: number
+        continuation?: string
+      }> {
         const record = restoreRecord()
         const rawItems = Object.values(record)
         const items = postProcessData
@@ -40,19 +44,32 @@ export function provideLocalStorageDataClass(
             ? items
             : items.filter((item) =>
                 Object.entries(filters).every(
-                  ([filterAttribute, filterValue]) =>
-                    item[filterAttribute] === filterValue ||
-                    (filterValue === 'true' &&
-                      item[filterAttribute] === true) ||
-                    (filterValue === 'false' &&
-                      item[filterAttribute] === false),
+                  ([filterAttribute, { value: filterValue, opCode }]) => {
+                    const itemValue = item[filterAttribute]
+                    const eq =
+                      itemValue === filterValue ||
+                      (filterValue === 'true' && itemValue === true) ||
+                      (filterValue === 'false' && itemValue === false)
+
+                    return opCode === 'neq' ? !eq : eq
+                  },
                 ),
               )
 
         if (params.search()) throw new Error('search not implemented!')
         const orderedItems = orderItems(filteredItems, params.order())
 
-        return { results: orderedItems, count: filteredItems.length }
+        const offset =
+          params.continuation() === undefined
+            ? 0
+            : Number(params.continuation())
+        const newOffset = offset + 10
+
+        const results = orderedItems.slice(offset, newOffset)
+        const continuation =
+          newOffset < orderedItems.length ? newOffset.toString() : undefined
+
+        return { results, continuation, count: orderedItems.length }
       },
 
       async get(id: string): Promise<DataItem | null> {

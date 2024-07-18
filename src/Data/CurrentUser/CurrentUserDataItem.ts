@@ -4,30 +4,29 @@ import { ensureString } from '../../utils/ensureString'
 import { isOptionalString } from '../../utils/isOptionalString'
 import { neoletterClient } from '../neoletterClient'
 import { pisaClient } from '../pisaClient'
+import { errorToast } from './errorToast'
 
 export const CurrentUser = provideDataItem('CurrentUser', {
   async get() {
     const user = await load(currentUser)
-    if (!user) return {}
+    if (!user) return null
 
-    const neoletterProfile = await neoletterClient().get('my/profile')
-    if (!isNeoletterData(neoletterProfile)) {
-      throw new Error('Neoletter data is not in the expected format')
+    let neoletterProfile
+    try {
+      neoletterProfile = await neoletterClient().get('my/profile')
+      if (!isNeoletterData(neoletterProfile)) {
+        throw new Error('Invalid user profile')
+      }
+    } catch (error) {
+      errorToast('Unable to connect to Neoletter', error)
+      throw error
     }
 
-    const whoAmI = await pisaClient('whoami').get('')
-
-    if (!isWhoAmI(whoAmI)) {
-      throw new Error('Whoami data is not in the expected format')
-    }
-
-    const pisaUserId = ensureString(whoAmI._id)
-    const salesUserId = ensureString(whoAmI.salesUserId) // TODO: Remove "ensureString" once datalocator filter can handle "null"
-    const serviceUserId = ensureString(whoAmI.serviceUserId) // TODO: Remove "ensureString" once datalocator filter can handle "null"
+    const { pisaUserId, salesUserId, serviceUserId } = await pisaIds()
 
     return {
       email: user.email(),
-      picture: ensureString(user.picture()) || personCircle,
+      picture: user.picture() || personCircle,
       jrUserId: user.id(),
 
       pisaUserId,
@@ -68,6 +67,31 @@ export const CurrentUser = provideDataItem('CurrentUser', {
     })
   },
 })
+
+async function pisaIds() {
+  if (!import.meta.env.ENABLE_PISA) {
+    return {
+      pisaUserId: 'F87BDC400E41D630E030A8C00D01158A',
+      salesUserId: '052601BEBCEC39C8E040A8C00D0107AC',
+      serviceUserId: 'D456ACF6FF405922E030A8C02A010C68',
+    }
+  }
+
+  let whoAmI
+  try {
+    whoAmI = await pisaClient('whoami').get('')
+    if (!isWhoAmI(whoAmI)) throw new Error('Invalid user ID')
+  } catch (error) {
+    errorToast('Unable to connect to PisaSales', error)
+    throw error
+  }
+
+  return {
+    pisaUserId: whoAmI._id,
+    salesUserId: whoAmI.salesUserId,
+    serviceUserId: whoAmI.serviceUserId,
+  }
+}
 
 interface NeoletterData {
   company?: string
