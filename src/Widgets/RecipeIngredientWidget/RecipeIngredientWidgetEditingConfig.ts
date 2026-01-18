@@ -30,4 +30,18 @@ provideEditingConfig(RecipeIngredientWidget, {
     amount: '1',
     notes: '',
   },
+  validations: [
+    [
+      'foodId',
+      (foodId: string) => {
+        if (!foodId) return 'Please specify a food item.'
+      },
+    ],
+    [
+      'amount',
+      (amount: string) => {
+        if (!amount) return 'Please specify an amount.'
+      },
+    ],
+  ],
 })
